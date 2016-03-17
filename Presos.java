@@ -16,7 +16,7 @@ public class Presos {
 	Preso [] presos = new Preso [N_PRESOS];
 
 	for (int i = 0; i < N_PRESOS; i++) {
-	    presos[i] = new Preso(light);
+	    presos[i] = new Preso(light,i);
 	}
 
 	jefe.start();
@@ -69,7 +69,9 @@ public class Presos {
 	public void run(){
 	    while (contador > 0){
 		try {
-		    sem.acquire(); //Acceso a sección crítica		
+		    System.out.println("BOSS Acquire");
+		    sem.acquire(); //Acceso a sección crítica
+		    System.out.println("BOSS Getted");
 		}
 		catch (Throwable e) {
 		    System.out.println("Error " + e.getMessage());
@@ -84,7 +86,9 @@ public class Presos {
 		}
 		
 		try {
-		    sem.release(); //Salida de sección crítica		
+		    sem.release(); //Salida de sección crítica
+		    System.out.println("BOSS OUT");
+
 		}
 		catch (Throwable e) {
 		    System.out.println("Error " + e.getMessage());
@@ -101,15 +105,20 @@ public class Presos {
     static class Preso extends Thread {
 	private Switch light;
 	private boolean done = false;
+	private int id;
 	
-	public Preso (Switch light) {
+	public Preso (Switch light, int id) {
 	    this.light = light;
+	    this.id = id;
+
 	}
 
 	public void run() {
 	    while (!Presos.fin){
 		try {
-		    sem.acquire();	
+		    System.out.println("[" + id + "]" + " Acquire");
+		    sem.acquire(); //Acceso a sección crítica
+		    System.out.println("[" + id + "]" + " Getted");
 		}
 		catch (Throwable e) {
 		    System.out.println("Error " + e.getMessage());
